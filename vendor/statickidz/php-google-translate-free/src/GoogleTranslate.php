@@ -85,6 +85,7 @@ class GoogleTranslate
 
         rtrim($fields_string, '&');
 
+        /*
         // Open connection
         $ch = curl_init();
 
@@ -103,8 +104,22 @@ class GoogleTranslate
 
         // Close connection
         curl_close($ch);
+        */
 
-        return $result;
+       $headers = "accept: */*\r\n" .
+           "User-Agent: AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1\r\n";
+       $context = [
+           'http' => [
+               'method' => 'POST',
+               'header' => $headers,
+               'content' => http_build_query($fields),
+           ]
+       ];
+       $context = stream_context_create($context);
+       $result = str_replace('+','',file_get_contents($url, false, $context));
+
+
+      return $result;
     }
 
     /**
